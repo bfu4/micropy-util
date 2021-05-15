@@ -11,6 +11,6 @@ $ picopy "$FILE" # will copy file into pico. DEVICE variable is preset and might
 ```
 
 ## refs
-https://datasheets.raspberrypi.org/pico/raspberry-pi-pico-python-sdk.pdf
-https://github.com/mytechnotalent/dc540-0x00002
-https://github.com/mytechnotalent/MicroPython-For-micro-bit
+* https://datasheets.raspberrypi.org/pico/raspberry-pi-pico-python-sdk.pdf
+* https://github.com/mytechnotalent/dc540-0x00002
+* https://github.com/mytechnotalent/MicroPython-For-micro-bit
