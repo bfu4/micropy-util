@@ -1,0 +1,5 @@
+brew "python@3"
+brew "cmake"
+brew "automake"
+brew "gnutls"
+brew "gcc-arm-embedded"

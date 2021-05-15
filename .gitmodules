@@ -1,0 +1,6 @@
+[submodule "micropython"]
+	path = micropython
+	url = https://github.com/micropython/micropython
+[submodule "radare2"]
+	path = radare2
+	url = https://github.com/radareorg/radare2

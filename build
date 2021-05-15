@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# If this doesn't work it's because I already built this and cba to reinstall for testing purposes.
+
+CWD=`pwd`
+
+# ================= pretty
+
+ACCENT="\033[1;35m"
+RES="\033[0m"
+
+alert() {
+  printf "${ACCENT}[!]${RES} $@\n"
+}
+
+info() {
+  printf "::\t $@ \n\n"
+}
+
+# ================= check for homebrew
+
+check_brew() {
+   local _brew=`which brew`
+   if [[ -e $_brew ]]; then
+      info "found brew: $_brew"
+   else
+      alert "Could not find homebrew!"
+      exit 1
+   fi
+}
+
+# ================= start
+alert "looking for homebrew"
+check_brew
+
+alert "installing deps"
+brew bundle --file "$CWD"/Brewfile
+
+alert "getting submodules" 
+git submodule update --init --remote
+
+info "building micropython & elf2uf2"
+cd "$CWD"/micropython && make -C mpy-cross && cd ports/rp2/build-PICO && cmake .. && cd .. && make
+cd "$CWD"
+
+info "linking elf2uf2"
+sudo ln -s "$CWD"/micropython/ports/rp2/elf2uf2/elf2uf2 /usr/local/bin/elf2uf2
+
+info "building and installing radare2"
+cd "$CWD"/radare2
+./sys/install.sh
+
+cd "$CWD"
+
+alert "setting up scripts"
+mkdir -p "$CWD"/out
+cd "$CWD"/out
+
+info "pyboard.py"
+wget https://raw.githubusercontent.com/mytechnotalent/Pico-Escape-Room/main/pyboard.py
+sudo mkdir -p /usr/local/share/pyboard/
+ln -s /usr/local/share/pyboard.py "$CWD"/out/pyboard.py
+
+info "picopy"
+alert "you should modify the variable device in /usr/local/bin/picopy, after this install, if it is something else"
+wget https://gist.githubusercontent.com/bfu4/4e25c3a34236c5f789fea52d6176e4b2/raw/35c704b2088ebb47abf5084336d2a32dbf83e381/picopy
+chmod +x picopy
+sudo cp "$CWD"/out/picopy /usr/local/bin/picopy
+
+cd "$CWD"
+alert "done!"
